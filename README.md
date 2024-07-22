@@ -6,7 +6,10 @@
 
 ## Зависимости
 
-Стандартная библиотека `requests`
+Стандартная библиотека `requests` и библиотека `colorama`
+```bash
+  pip install requests colorama 
+```
     
 ## Запуск
 
@@ -26,7 +29,7 @@
 
 - [ ] Сделать возможность кастомизации выводимых полей о вакансии
 - [ ] Сохранять в базу полученные вакансии
-- [ ] Возможность помечать вакансии на которые отправлялся отзыв
-- [ ] Возможность помечать вакансии на которые был получен ответ на отзыв
+- [ ] Возможность помечать вакансии на которые отправлялся отзыв (https://api.hh.ru/openapi/redoc#tag/Otklikipriglasheniya-rabotodatelya/operation/get-negotiations - https://api.hh.ru/negotiations)
+- [ ] Возможность помечать вакансии на которые был получен ответ на отзыв (https://api.hh.ru/openapi/redoc#tag/Otklikipriglasheniya-rabotodatelya/operation/get-collection-negotiations-list - https://api.hh.ru/negotiations/response)
 - [ ] Логирование в Sentry
 
