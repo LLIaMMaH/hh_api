@@ -1,10 +1,11 @@
 import requests
 from colorama import init, Fore, Style
 
+
 class HeadHunterAPI:
     def __init__(self):
         self.base_url = "https://api.hh.ru"
-    
+
     def search_vacancies(self, text, area=1, per_page=10):
         """Поиск вакансий по ключевым словам."""
         search_url = f"{self.base_url}/vacancies"
@@ -16,7 +17,23 @@ class HeadHunterAPI:
         response = requests.get(search_url, params=params)
         response.raise_for_status()  # Проверка на успешность запроса
         return response.json()
-    
+
+    def format_salary(self, salary_data):
+        if salary_data is None:
+            return 'Не указана'
+
+        salary_from = salary_data.get('from', 0)
+        salary_to = salary_data.get('to', 0)
+        currency = salary_data.get('currency', '')
+        if salary_from and salary_to:
+            return f'От {salary_from} до {salary_to} {currency}'
+        elif salary_from:
+            return f'От {salary_from} {currency}'
+        elif salary_to:
+            return f'До {salary_to} {currency}'
+        else:
+            return 'Не указана'
+
     def print_vacancies(self, vacancies):
         """Вывод информации о вакансиях."""
         for item in vacancies['items']:
@@ -25,27 +42,10 @@ class HeadHunterAPI:
             print(f"{Fore.GREEN}Компания{Style.RESET_ALL}: {item['employer']['name']}")
             print(f"{Fore.GREEN}Город{Style.RESET_ALL}: {item['area']['name']}")
             print(f"{Fore.GREEN}Опубликовано{Style.RESET_ALL}: {item['published_at']}")
-            if item['salary'] is not None:
-                salary_from = 0
-                if item['salary']['from'] and str(item['salary']['from']).isnumeric():
-                    salary_from = item['salary']['from']
-                salary_to = 0
-                if item['salary']['to'] and str(item['salary']['to']).isnumeric():
-                    salary_to = item['salary']['to']
-                if salary_from + salary_to > 0:
-                    salary_to_string = ''
-                    if salary_from > 0:
-                        salary_to_string = 'От ' + str(salary_from)
-                    if salary_to > 0:
-                        if salary_to_string != '':
-                            salary_to_string += ' '
-                        salary_to_string += 'До ' + str(salary_to)
-                    if item['salary']['currency'] != '':
-                        salary_to_string += ' ' + str(item['salary']['currency'])
-                    if salary_to_string != '':
-                        print(f"{Fore.GREEN}Заработная плата{Style.RESET_ALL}: {salary_to_string}")
+            print(f"{Fore.GREEN}Заработная плата{Style.RESET_ALL}: {self.format_salary(item['salary'])}")
             print(f"{Fore.GREEN}Ссылка{Style.RESET_ALL}: {item['alternate_url']}")
             print("-" * 40)
+
 
 if __name__ == "__main__":
     init(autoreset=True)
@@ -58,4 +58,3 @@ if __name__ == "__main__":
         per_page = int(ask_per_page)
     vacancies = hh_api.search_vacancies(search_text, area_number, per_page)
     hh_api.print_vacancies(vacancies)
-
