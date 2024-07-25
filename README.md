@@ -6,11 +6,12 @@
 
 ## Зависимости
 
-Стандартная библиотека `requests` и библиотека `colorama`
+Библиотеки `requests`, `sqlite3`, `datetime` и `colorama`
 ```bash
-  pip install requests colorama 
+  pip install requests sqlite3 datetime colorama 
 ```
-    
+* _А вдруг не установлено у кого-нибудь._
+
 ## Запуск
 
 Запуск скрипт `hh_api.py` и отвечаем на вопросы
