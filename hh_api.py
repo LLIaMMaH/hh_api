@@ -1,10 +1,33 @@
 import requests
+import sqlite3
 from colorama import init, Fore, Style
+from datetime import datetime
 
 
 class HeadHunterAPI:
     def __init__(self):
         self.base_url = "https://api.hh.ru"
+        self.db_connection = sqlite3.connect('vacancies.db')
+        self.create_table()
+
+    def create_table(self):
+        """Создание таблицы для хранения данных о вакансиях."""
+        with self.db_connection:
+            self.db_connection.execute("""
+            CREATE TABLE IF NOT EXISTS vacancies (
+                id TEXT PRIMARY KEY,
+                name TEXT,
+                employer TEXT,
+                area TEXT,
+                published_at TEXT,
+                salary_from REAL,
+                salary_to REAL,
+                currency TEXT,
+                alternate_url TEXT,
+                update_at TEXT
+            )
+            """)
+
 
     def search_vacancies(self, text, area=1, per_page=10):
         """Поиск вакансий по ключевым словам."""
