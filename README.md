@@ -29,8 +29,9 @@
 ## Планы на будущее
 
 - [ ] Сделать возможность кастомизации выводимых полей о вакансии
-- [ ] Сохранять в базу полученные вакансии
 - [ ] Возможность помечать вакансии на которые отправлялся отзыв (https://api.hh.ru/openapi/redoc#tag/Otklikipriglasheniya-rabotodatelya/operation/get-negotiations - https://api.hh.ru/negotiations)
 - [ ] Возможность помечать вакансии на которые был получен ответ на отзыв (https://api.hh.ru/openapi/redoc#tag/Otklikipriglasheniya-rabotodatelya/operation/get-collection-negotiations-list - https://api.hh.ru/negotiations/response)
 - [ ] Логирование в Sentry
 
+## Что сделано
+- [X] Сохранять в базу полученные вакансии
