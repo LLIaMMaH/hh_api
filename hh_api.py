@@ -10,7 +10,7 @@ class HeadHunterAPI:
         self.db_connection = sqlite3.connect('vacancies.db')
         self.create_table()
 
-    def create_table(self):
+    def create_table(self) -> None:
         """Создание таблицы для хранения данных о вакансиях."""
         with self.db_connection:
             self.db_connection.execute("""
@@ -28,7 +28,6 @@ class HeadHunterAPI:
             )
             """)
 
-
     def search_vacancies(self, text, area=1, per_page=10):
         """Поиск вакансий по ключевым словам."""
         search_url = f"{self.base_url}/vacancies"
@@ -41,7 +40,8 @@ class HeadHunterAPI:
         response.raise_for_status()  # Проверка на успешность запроса
         return response.json()
 
-    def format_salary(self, salary_data):
+    def format_salary(self, salary_data) -> str:
+        """Приводим зарплату к одной строке."""
         if salary_data is None:
             return 'Не указана'
 
@@ -57,7 +57,7 @@ class HeadHunterAPI:
         else:
             return 'Не указана'
 
-    def print_vacancies(self, vacancies):
+    def print_vacancies(self, vacancies) -> None:
         """Вывод информации о вакансиях."""
         for item in vacancies['items']:
             print(f"{Fore.GREEN}Вакансия с id:{Style.RESET_ALL}: {Fore.YELLOW}{item['id']}")
@@ -69,6 +69,44 @@ class HeadHunterAPI:
             print(f"{Fore.GREEN}Ссылка{Style.RESET_ALL}: {item['alternate_url']}")
             print("-" * 40)
 
+    def save_vacancy(self, vacancy) -> None:
+        """Сохраняем или обновляем информацию о вакансии в базе данных."""
+        with self.db_connection:
+            # salary_data = vacancy.get('salary', {'from': 0, 'to': 0, 'currency': None})
+            salary_from = 0
+            salary_to = 0
+            currency = None
+            if vacancy['salary'] is not None:
+                salary_from = vacancy['salary']['from']
+                salary_to = vacancy['salary']['to']
+                currency = vacancy['salary']['currency']
+
+            self.db_connection.execute("""
+                INSERT OR REPLACE INTO vacancies (
+                    id, name, employer, area, published_at, 
+                    salary_from, salary_to, currency, alternate_url, update_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                vacancy['id'],
+                vacancy['name'],
+                vacancy['employer']['name'],
+                vacancy['area']['name'],
+                vacancy['published_at'],
+                # salary_data.get('from'),
+                # salary_data.get('to'),
+                # salary_data.get('currency'),
+                salary_from,
+                salary_to,
+                currency,
+                vacancy['alternate_url'],
+                datetime.now().isoformat(),
+            ))
+
+    def process_vacancies(self, vacancies) -> None:
+        """Обрабатываем и сохраняем список вакансий."""
+        for item in vacancies['items']:
+            self.save_vacancy(item)
+
 
 if __name__ == "__main__":
     init(autoreset=True)
@@ -79,5 +117,9 @@ if __name__ == "__main__":
     per_page = 10
     if ask_per_page != "" and ask_per_page.isnumeric():
         per_page = int(ask_per_page)
+        if per_page > 100:
+            per_page = 100
+            print(f"{Fore.RED}Максимально допустимое значение 100")
     vacancies = hh_api.search_vacancies(search_text, area_number, per_page)
+    hh_api.process_vacancies(vacancies)
     hh_api.print_vacancies(vacancies)
