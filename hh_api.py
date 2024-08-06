@@ -23,6 +23,7 @@ class HeadHunterAPI:
                 salary_from REAL,
                 salary_to REAL,
                 currency TEXT,
+                gross INTEGER,
                 alternate_url TEXT,
                 update_at TEXT
             )
@@ -48,12 +49,16 @@ class HeadHunterAPI:
         salary_from = salary_data.get('from', 0)
         salary_to = salary_data.get('to', 0)
         currency = salary_data.get('currency', '')
+        gross = salary_data.get('gross', False)
+        gross_string = ''
+        if gross:
+            gross_string = ' до вычета налогов'
         if salary_from and salary_to:
-            return f'От {salary_from} до {salary_to} {currency}'
+            return f'От {salary_from} до {salary_to} {currency}{gross_string}'
         elif salary_from:
-            return f'От {salary_from} {currency}'
+            return f'От {salary_from} {currency}{gross_string}'
         elif salary_to:
-            return f'До {salary_to} {currency}'
+            return f'До {salary_to} {currency}{gross_string}'
         else:
             return 'Не указана'
 
@@ -72,32 +77,31 @@ class HeadHunterAPI:
     def save_vacancy(self, vacancy) -> None:
         """Сохраняем или обновляем информацию о вакансии в базе данных."""
         with self.db_connection:
-            # salary_data = vacancy.get('salary', {'from': 0, 'to': 0, 'currency': None})
             salary_from = 0
             salary_to = 0
             currency = None
+            gross = False
             if vacancy['salary'] is not None:
                 salary_from = vacancy['salary']['from']
                 salary_to = vacancy['salary']['to']
                 currency = vacancy['salary']['currency']
+                gross = vacancy['salary']['gross']
 
             self.db_connection.execute("""
                 INSERT OR REPLACE INTO vacancies (
                     id, name, employer, area, published_at, 
-                    salary_from, salary_to, currency, alternate_url, update_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    salary_from, salary_to, currency, gross, alternate_url, update_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 vacancy['id'],
                 vacancy['name'],
                 vacancy['employer']['name'],
                 vacancy['area']['name'],
                 vacancy['published_at'],
-                # salary_data.get('from'),
-                # salary_data.get('to'),
-                # salary_data.get('currency'),
                 salary_from,
                 salary_to,
                 currency,
+                gross,
                 vacancy['alternate_url'],
                 datetime.now().isoformat(),
             ))
