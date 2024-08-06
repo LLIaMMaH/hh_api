@@ -32,7 +32,7 @@
 - [ ] Возможность помечать вакансии на которые отправлялся отзыв (https://api.hh.ru/openapi/redoc#tag/Otklikipriglasheniya-rabotodatelya/operation/get-negotiations - https://api.hh.ru/negotiations)
 - [ ] Возможность помечать вакансии на которые был получен ответ на отзыв (https://api.hh.ru/openapi/redoc#tag/Otklikipriglasheniya-rabotodatelya/operation/get-collection-negotiations-list - https://api.hh.ru/negotiations/response)
 - [ ] Логирование в Sentry
-- [ ] [Просмотр конкретной вакансии](https://api.hh.ru/openapi/redoc#tag/Upravlenie-vakansiyami/operation/get-vacancy) https://api.hh.ru/vacancies/{vacancy_id}
+- [ ] [Просмотр конкретной вакансии](https://api.hh.ru/openapi/redoc#tag/Upravlenie-vakansiyami/operation/get-vacancy) (https://api.hh.ru/vacancies/{vacancy_id})
 
 ## Что сделано
 - [X] Сохранять в базу полученные вакансии
