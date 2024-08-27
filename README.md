@@ -6,24 +6,37 @@
 
 ## Зависимости
 
-Библиотеки `requests`, `sqlite3`, `datetime` и `colorama`
+Библиотеки `requests`, `sqlite3`, `datetime`, `colorama` [pypi](https://pypi.org/project/colorama/) [git](https://github.com/tartley/colorama) и `environs` [pypi](https://pypi.org/project/environs/) [git]((https://github.com/sloria/environs))
 ```bash
-  pip install requests sqlite3 datetime colorama 
+  pip install requests sqlite3 datetime colorama environs 
 ```
 * _А вдруг не установлено у кого-нибудь._
 
+
+
+## Получение client_id и client_secret для приложения
+Теперь для работы приложения его необходимо зарегистрировать на сайте https://dev.hh.ru/admin.  
+Переименовать файл .env.example в файл .env  и записать полученные данные. 
+
+
+
 ## Запуск
 
-Запуск скрипт `hh_api.py` и отвечаем на вопросы
+Запускаем скрипт и отвечаем на вопросы
 
 ```bash
-  python3 hh_api.py 
+  python3 main.py 
 ```
 
 
 ## Особенности
 
 - Получение списка вакансий прямо в терминале
+ 
+
+
+
+
 
 
 ## Планы на будущее
@@ -35,7 +48,8 @@
 - [ ] [Просмотр конкретной вакансии](https://api.hh.ru/openapi/redoc#tag/Upravlenie-vakansiyami/operation/get-vacancy) (https://api.hh.ru/vacancies/{vacancy_id})
 
 ## Что сделано
-- [X] Сохранять в базу полученные вакансии
+- [X] Сохранять в базу полученные вакансии  
+- [X] Получение токена для работы с сервисом и сохранением его для дальнейшей работы  
 
 
 # Описание API
